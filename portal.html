@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member sign-in — Equilibrium</title>
+<meta name="description" content="A mockup of the Circle member portal. It authenticates nobody and stores nothing, and lists in ten rows what must exist before it can.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/site.css?v=7">
+</head>
+<body>
+<div class="demo">Demonstration mockup — content awaiting the movement&rsquo;s approval. Nothing on this site is published.</div><header class="hdr"><div class="wrap">
+  <a class="brand" href="index.html">
+    <img src="assets/mark.svg" alt="" width="26" height="26">
+    <span class="nm">Equilibrium</span>
+  </a>
+  <nav class="nav"><a href="index.html#statement">Statement</a><a href="principles.html">Principles</a><a href="movement.html">The movement</a><a href="join.html">Join</a><span class="sep" aria-hidden="true"></span><a href="services.html">Services</a><a href="lobbying.html">Lobbying</a><a href="circle.html">Circle</a></nav>
+  <a class="signin" href="portal.html" aria-current="page">Member sign-in</a>
+</div></header>
+<main>
+<div class="band"><div class="wrap"><div class="in">
+  <span class="eyebrow">Member portal</span>
+  <h1>Sign in to the <span class="di">Circle</span>.</h1>
+  <p class="sub">A mockup. It authenticates nobody, stores nothing, and sends nothing anywhere.</p>
+</div></div></div>
+
+<section id="signin"><div class="wrap">
+  <div class="filet"></div>
+  <div class="sec-h"><span class="eyebrow">Sign in</span><h2>The door, drawn but not fitted</h2></div>
+  <div class="duo">
+    <div class="portal">
+      <form class="form" onsubmit="return false;">
+        <div class="champ">
+          <label for="mid">Member reference</label>
+          <input id="mid" name="mid" type="text" autocomplete="off"
+                 placeholder="The reference on your admission notice">
+        </div>
+        <div class="champ">
+          <label for="pw">Passphrase</label>
+          <input id="pw" name="pw" type="password" autocomplete="off"
+                 placeholder="Nothing typed here goes anywhere">
+        </div>
+        <button class="btn btn-plein" type="submit" disabled>Disabled in this mockup</button>
+      </form>
+      <div class="actions">
+        <a class="btn" href="portal-area.html">See the member area anyway</a>
+      </div>
+    </div>
+    <div>
+      <div class="avert" style="margin-top:0">
+        <h4>What this form does</h4>
+        <p><b>Nothing.</b> There is no address behind it, no database, no
+        script and no third-party service. The button is disabled, the form has
+        no destination, and the page loads nothing from anywhere.</p>
+        <p>The field asks for a <b>member reference rather than a name or an
+        address</b>. That is not decoration: a sign-in page that accepts an
+        email address turns every failed attempt into a statement about who is
+        and is not a member of a political movement.</p>
+      </div>
+      <div class="avert">
+        <h4>Why it is not connected yet</h4>
+        <p>Membership of a political movement is sensitive information
+        wherever it is held. Connecting this form would create a list of the
+        members of a political movement with <b>nobody in law responsible for
+        it</b> and no country whose rules apply to it.</p>
+        <p>That is not a detail to sort out after launch. It is the thing that
+        has to exist first.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="before"><div class="wrap">
+  <div class="filet"></div>
+  <div class="sec-h"><span class="eyebrow">Requirements</span><h2>What has to exist before it can hold one name</h2><p>Ten rows. This is not a feature list &mdash; it is what is missing, and why the portal delivered today authenticates nobody.</p></div>
+  <table class="tbl">
+    <thead><tr><th>Requirement</th><th>Why it comes first</th><th>Status</th></tr></thead>
+    <tbody><tr><td>A responsible body</td><td class="why">Somebody in law has to hold the member list. Until the legal form exists, nobody does.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>A country</td><td class="why">Which country's data law applies decides the rest of this table, including which rows are optional.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Hosting</td><td class="why">Where the member list physically sits, and whose jurisdiction that puts it under.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Encryption at rest</td><td class="why">Membership of a political movement is sensitive. A member list in a plain database is a leak waiting for an occasion.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Access control</td><td class="why">Who inside the movement may see the list, and a record of who looked.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Retention</td><td class="why">How long a former member stays in the file, and what happens to them when they leave.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Breach procedure</td><td class="why">Written before it is needed, because written afterwards it is useless.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Member rights</td><td class="why">Access, correction, erasure and objection, with somebody named to answer them.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>An impact assessment</td><td class="why">Processing sensitive data at scale generally requires one before a single record is created.</td><td><span class="tbd">To be decided</span></td></tr><tr><td>Authentication</td><td class="why">Passwords hashed, sessions bounded, and a second factor for anyone able to see the whole list.</td><td><span class="tbd">To be decided</span></td></tr></tbody>
+  </table>
+  <div class="avert">
+    <h4>The honest order of work</h4>
+    <p>Building the login first and the responsibilities afterwards is the
+    usual order, and it is the wrong one. The code here is the small part; the
+    rows above are the part that decides whether the code may run at
+    all.</p>
+    <p>Answer the first two rows &mdash; a responsible body and a country
+    &mdash; and the rest becomes ordinary engineering that I can build
+    quickly.</p>
+  </div>
+</div></section>
+</main>
+<footer class="ft"><div class="wrap">
+  <div class="haut">
+    <div>
+      <span class="brand">
+        <img src="assets/mark.svg" alt="" width="26" height="26">
+        <span class="nm">Equilibrium</span>
+      </span>
+      <p class="ligne">Global political &amp; diplomatic movement. Restoring balance through diplomacy, sovereignty, economic cooperation &amp; strategic stability.</p>
+    </div>
+    <nav><a href="index.html#statement">Statement</a><a href="principles.html">Principles</a><a href="movement.html">The movement</a><a href="join.html">Join</a><a href="services.html">Services</a><a href="lobbying.html">Lobbying</a><a href="circle.html">Circle</a></nav>
+  </div>
+  <div class="bas">
+    <p>The statement on this site is quoted verbatim. All other text is draft
+    copy written from that statement and is subject to the movement&rsquo;s
+    approval.</p>
+    <p>No legal form, place of registration, membership, funding, registration
+    as a representative, accreditation or official status of any kind is
+    claimed anywhere on this site. Those are open decisions and are listed as
+    such on <a href="movement.html#decisions">The movement</a>.</p>
+    <p>The movement publishes positions in its own name. The practice speaks
+    for clients, in theirs. The rule that separates the two is set out on
+    <a href="lobbying.html#wall">Lobbying</a>.</p>
+  </div>
+</div></footer>
+</body>
+</html>
