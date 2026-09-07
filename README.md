@@ -56,9 +56,9 @@ stricter regime; which regimes apply follows from where the practice is set up
 and from where each client sits.
 
 Those regimes are a question for counsel admitted in whichever country you
-choose — foreign-agent registration, lobbying registers, gifts and hospitality
-rules, and political-financing law all bite here, and several of them carry
-criminal penalties rather than fines. That advice has to come from a lawyer in
+choose — foreign-agent registration, lobbying registers, the rules on what may
+be offered to officials and on hospitality, and political-financing law all bite
+here, and several of them carry criminal penalties rather than fines. That advice has to come from a lawyer in
 that country, not from a website and not from me. What I have done is make sure
 the site never asserts compliance you do not yet have.
 
@@ -207,7 +207,7 @@ python3 -m http.server 8861 --directory ..    # in one terminal, from the site r
 python3 verif.py                              # in another
 ```
 
-**1498 checks, 0 failures**, across 10 pages × 14 viewport widths from 320 px to
+**1509 checks, 0 failures**, across 10 pages × 14 viewport widths from 320 px to
 1440 px. The suite measures the page a browser actually draws — never the
 source files. Among what it proves rather than assumes:
 
@@ -319,6 +319,11 @@ rendered page.
 As everywhere else on this site: no suggested amount, no target, no budget, no
 total already received, no donor. Six questions a giver is entitled to ask are
 shown with their true answer for today, `To be decided`.
+
+The page says **donation**, not *gift* — your instruction of 7 September. The
+word is gone from the whole site, and the suite now checks all ten pages for it
+rather than only the one where I had written it, because that is exactly the
+kind of word a later rewrite puts back without meaning to.
 
 ### The address lives in one place, and it is empty
 

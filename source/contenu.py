@@ -713,7 +713,7 @@ ADRESSE_BTC = ""
 RESEAU_BTC = "Bitcoin mainnet (BTC)"
 
 SOUTIEN_EST = [
-    ("A gift, and nothing else.",
+    ("A donation, and nothing else.",
      "It is given to the movement. It is not a purchase, not a subscription "
      "and not an investment."),
     ("Voluntary, and of any size.",
@@ -753,7 +753,7 @@ SOUTIEN_OUVERT = [
     ("What it pays for",
      "No budget has been published, so none is claimed. A page that promised "
      "where the money goes would be inventing it."),
-    ("Whether gifts are published",
+    ("Whether donations are published",
      "Whether contributions, their totals and their origins appear publicly, "
      "and at which threshold."),
     ("Which rules apply",

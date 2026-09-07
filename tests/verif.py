@@ -576,6 +576,25 @@ with sync_playwright() as pw:
           [c["titre"] for c in cartes] == [t for t, _ in SOUTIEN_OUVERT],
           str([c["titre"] for c in cartes]))
 
+    # Le client a demande le retrait du mot « gift » (7 sept). Le retrait se
+    # verifie sur TOUT le site et pas seulement la ou je l'avais ecrit : c'est
+    # exactement le genre de mot qu'une reecriture future replace sans y penser.
+    # Recherche sur limite de mot, pour ne pas se declencher sur « gifted » —
+    # il ne demande pas d'interdire une racine, il demande un mot.
+    for cette_page in PAGES:
+        pg.goto(BASE + cette_page, wait_until="domcontentloaded")
+        trouves = re.findall(r"\bgifts?\b", pg.inner_text("body"), re.I)
+        verif(f"{cette_page} : le mot « gift » n'y figure pas",
+              not trouves, str(trouves))
+    pg.goto(BASE + "support.html", wait_until="networkidle")
+    # Controle positif : la recherche ci-dessus trouve bien quelque chose quand
+    # il y a quelque chose a trouver. Sans lui, une regex cassee rendrait dix
+    # controles verts sans rien lire. Voir la lecon « un controle positif qui
+    # ne peut pas se declencher ».
+    verif("soutien : le controle du mot sait encore trouver un mot",
+          len(re.findall(r"\bdonations?\b", pg.inner_text("body"), re.I)) >= 2,
+          "la recherche par mot ne trouve plus rien — regex suspecte")
+
     # =======================================================================
     # LA PRATIQUE — services diplomatiques et lobbying.
     #

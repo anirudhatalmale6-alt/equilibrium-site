@@ -1062,7 +1062,7 @@ soutien = f'''<main>
 
 <section id="what"><div class="wrap">
   <div class="filet"></div>
-  {titre_section("What it is", "A gift, and what it does not buy",
+  {titre_section("What it is", "A donation, and what it does not buy",
                  "The distinction matters more here than on any other page of "
                  "this site.")}
   <div class="deux soutien">
