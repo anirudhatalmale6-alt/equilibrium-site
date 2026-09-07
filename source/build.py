@@ -40,7 +40,9 @@ from contenu import (MOUVEMENT, LIGNE, CHAINE, DECLARATION, PRINCIPES,
                      NEST_PAS, DECISIONS, FAQ,
                      PRATIQUE, PRATIQUE_NEST_PAS, LOBBYING_FAIT, LOBBYING_NEFAIT,
                      MURAILLE, FAQ_PRATIQUE,
-                     CERCLE, CERCLE_QUOI, CERCLE_ACTIVITES, PORTAIL_EXIGENCES)
+                     CERCLE, CERCLE_QUOI, CERCLE_ACTIVITES, PORTAIL_EXIGENCES,
+                     ADRESSE_BTC, RESEAU_BTC, SOUTIEN_EST, SOUTIEN_NEST_PAS,
+                     SOUTIEN_OUVERT)
 
 _ICI = os.path.dirname(os.path.abspath(__file__))
 # Dans le paquet livre, les scripts sont dans source/ et les pages un cran
@@ -49,7 +51,7 @@ _ICI = os.path.dirname(os.path.abspath(__file__))
 # regeneration sans erreur, sans effet, et qui a l'air d'avoir marche.
 RACINE = os.path.dirname(_ICI) if os.path.basename(_ICI) == "source" else _ICI
 
-VERSION_CSS = 7     # a incrementer a chaque modification de assets/site.css
+VERSION_CSS = 8     # a incrementer a chaque modification de assets/site.css
 BANDEAU_DEMO = True
 
 E = html.escape
@@ -71,7 +73,8 @@ GROUPES = [
     ("The movement", [("index.html#statement", "Statement", "statement"),
                       ("principles.html", "Principles", "principles"),
                       ("movement.html", "The movement", "movement"),
-                      ("join.html", "Join", "join")]),
+                      ("join.html", "Join", "join"),
+                      ("support.html", "Support", "support")]),
     ("The practice", [("services.html", "Services", "services"),
                       ("lobbying.html", "Lobbying", "lobbying"),
                       ("circle.html", "Circle", "circle")]),
@@ -967,6 +970,147 @@ espace = f'''<main>
 
 
 # ---------------------------------------------------------------------------
+# page 10 — soutenir avant le lancement
+# ---------------------------------------------------------------------------
+# La seule page du site ou une erreur d'affichage coute de l'argent a un tiers,
+# et de maniere irreversible. Elle est donc ecrite a l'envers des pages de dons
+# habituelles : ce qu'on ne peut pas promettre est affiche AVANT le moyen de
+# payer, et le cadre de l'adresse arrive apres les avertissements, pas avant.
+#
+# Elle n'invente rien, comme le reste du site. Aucun montant suggere, aucun
+# objectif, aucun budget, aucun total deja recu, aucun donateur : le mouvement
+# n'a publie aucun compte, et une page de dons qui chiffre ce qu'elle n'a pas
+# mesure est le genre de faux qui se verifie en une minute.
+def ligne_deux(titre, texte):
+    return f"<li><b>{titre}</b> {texte}</li>"
+
+
+def valeur_adresse():
+    """Le contenu du cadre d'adresse, entoure de deux marqueurs.
+
+    Les marqueurs <!--EQ_BTC--> et <!--/EQ_BTC--> ne changent pas un pixel du
+    site statique : ce sont des commentaires HTML. Ils existent pour la version
+    WordPress, ou le theme remplace ce qui se trouve ENTRE eux par la valeur
+    d'une option d'administration.
+
+    C'est ce qui garantit qu'il n'y a jamais qu'UN endroit ou l'adresse est
+    ecrite : cette constante quand le site est statique, l'option quand il est
+    en base. Une adresse recopiee dans le contenu d'une page serait une seconde
+    source, et la seconde source est toujours celle qu'on oublie de corriger.
+    """
+    dedans = (f'<span class="adr">{E(ADRESSE_BTC)}</span>' if ADRESSE_BTC
+              else '<span class="tbd">To be decided</span>')
+    return f"<!--EQ_BTC-->{dedans}<!--/EQ_BTC-->"
+
+
+soutien_est = "".join(ligne_deux(t, x) for t, x in SOUTIEN_EST)
+soutien_nest_pas = "".join(ligne_deux(t, x) for t, x in SOUTIEN_NEST_PAS)
+soutien_ouvert = "".join(
+    f'<div class="card"><h3>{t}</h3>'
+    f'<p><span class="tbd">To be decided</span></p><p>{x}</p></div>'
+    for t, x in SOUTIEN_OUVERT)
+
+soutien = f'''<main>
+<section><div class="wrap">
+  <div class="filet"></div>
+  {titre_section("Support", "Before the launch",
+                 "Equilibrium has not launched. This page explains what a "
+                 "contribution to it can honestly be at this stage, and what "
+                 "it cannot be.")}
+
+  <p>A movement at its beginning has no legal form, no country and no account.
+  There is a period before all three exist in which the only honest way to
+  accept support is directly, and to say plainly what is being given and what
+  is not being promised in return. That is what this page is.</p>
+
+  <div class="avert">
+    <h4>Read this before you send anything</h4>
+    <p><b>A payment on this network cannot be reversed.</b> Not by the sender,
+    not by the movement, not by anyone. There is no chargeback, no dispute
+    procedure and no way to recover a transfer sent to the wrong address.</p>
+    <p><b>The movement has no legal form and no country of registration yet.</b>
+    Both are open decisions, and so is whether the movement accepts
+    contributions at all and under which rules &mdash; the three of them are
+    listed on <a href="movement.html#decisions">The movement</a>. Political
+    funding is regulated in most countries. Anyone whose own country restricts
+    political contributions, or contributions to a body abroad, should check
+    that before sending rather than after.</p>
+    <p><b>Nothing on this page collects anything about you.</b> There is no
+    form, no account, no list and no third-party service. This page cannot
+    tell who read it or who gave.</p>
+  </div>
+</div></section>
+
+<section id="address"><div class="wrap">
+  <div class="filet"></div>
+  {titre_section("The address", "Where a contribution goes",
+                 "One address, published in one place.")}
+
+  <div class="don">
+    <span class="lab">Wallet address</span>
+    <p class="val">{valeur_adresse()}</p>
+    <span class="reseau">{RESEAU_BTC}</span>
+    <p class="note"><b>Check the address character by character</b> against
+    what is shown here before you send. It is the only check a sender has, and
+    there is nothing to be done afterwards if it was wrong.</p>
+    <p class="note">Send only on the network named above. An asset sent from
+    another chain to this address is destroyed, not returned.</p>
+    <p class="note">If you find an address for Equilibrium anywhere other than
+    this page, treat it as unverified until the movement publishes it here.</p>
+  </div>
+</div></section>
+
+<section id="what"><div class="wrap">
+  <div class="filet"></div>
+  {titre_section("What it is", "A gift, and what it does not buy",
+                 "The distinction matters more here than on any other page of "
+                 "this site.")}
+  <div class="deux soutien">
+    <div class="oui"><h4>What a contribution is</h4><ul>{soutien_est}</ul></div>
+    <div class="non"><h4>What it is not</h4><ul>{soutien_nest_pas}</ul></div>
+  </div>
+  <p style="margin-top:26px">The rule that keeps money away from what the
+  movement publishes is not a promise made on this page. It is set out, with
+  what it forbids, on <a href="lobbying.html#wall">Lobbying</a>.</p>
+</div></section>
+
+<section id="open"><div class="wrap">
+  <div class="filet"></div>
+  {titre_section("Open", "What cannot be answered yet",
+                 "Six questions a giver is entitled to ask. None of them has "
+                 "an answer today, and inventing one would be the fastest way "
+                 "to deserve none of this.")}
+  <div class="grid g3">{soutien_ouvert}</div>
+</div></section>
+
+<section id="other"><div class="wrap">
+  <div class="filet"></div>
+  {titre_section("Another way", "Support that costs nothing",
+                 "The movement is an argument. Money is not the only thing "
+                 "that carries one, and at this stage it is not the most "
+                 "useful.")}
+  <div class="grid g3">
+    <div class="card"><h3>Read it and argue with it</h3>
+      <p>The statement and the five principles are the whole of what the
+      movement has published. Disagreement with them is worth more to it now
+      than a transfer.</p></div>
+    <div class="card"><h3>Carry it further</h3>
+      <p>Putting the argument in front of people who have not seen it, and in
+      languages it has not been written in, is work the movement cannot do
+      alone.</p></div>
+    <div class="card"><h3>Say who you are</h3>
+      <p>The join page asks how you would like to take part. It is a mockup
+      today, and it says so, but it shows what will be asked.</p></div>
+  </div>
+  <div class="actions">
+    <a class="btn btn-plein" href="join.html">Go to Join</a>
+    <a class="btn" href="movement.html#decisions">See the open decisions</a>
+  </div>
+</div></section>
+</main>'''
+
+
+# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     # Un commentaire CSS mal ferme tue silencieusement toutes les regles qui le
     # suivent : la page s'affiche, rien n'indique l'erreur, et le correctif que
@@ -992,6 +1136,10 @@ if __name__ == "__main__":
     page("join.html", f"Join — {MOUVEMENT}",
          "How to follow Equilibrium, and what has to be settled before the movement "
          "can accept a single name.", "join", rejoindre)
+    page("support.html", f"Support — {MOUVEMENT}",
+         "How Equilibrium can honestly accept support before it has a legal form, "
+         "a country or an account: what a contribution is, what it does not buy, "
+         "and the six questions that have no answer yet.", "support", soutien)
     page("services.html", f"Services — {MOUVEMENT}",
          "Diplomatic advisory and declared representation for entities and states: "
          "six lines of work, how an engagement runs, and what the practice will not "

@@ -1,6 +1,6 @@
 # Equilibrium — site mockup
 
-Nine static pages. No framework, no build step to install, no database, no
+Ten static pages. No framework, no build step to install, no database, no
 JavaScript, no cookie, no tracker, and **no outbound request of any kind** —
 verified, not asserted (see below).
 
@@ -91,7 +91,7 @@ has, and loses it the first time somebody turns up.
 conflict**, and no country is named anywhere in the argument. The founding
 statement is general by construction; making it concrete would be putting words
 in the movement's mouth on the subject where that costs the most. The
-verification suite searches all nine pages for a list of states, blocs and
+verification suite searches all ten pages for a list of states, blocs and
 organisations and fails if one appears.
 
 **No audience figure appears anywhere.** Not the one on the account, not
@@ -165,7 +165,7 @@ from a third-party server hands that third party the IP address of every one of
 its readers. Avoiding it costs nothing.
 
 This is **measured**: the suite listens to every network request the browser
-makes while loading all nine pages at fourteen widths, and fails if a single one
+makes while loading all ten pages at fourteen widths, and fails if a single one
 leaves `127.0.0.1`.
 
 ---
@@ -178,7 +178,7 @@ level up, into the site root.
 ```sh
 cd source
 python3 gen_visuals.py     # rewrites assets/*.svg and brand/*.svg
-python3 build.py           # rewrites the nine .html pages
+python3 build.py           # rewrites the ten .html pages
 ```
 
 Both are deterministic. Every generated image has a fixed seed, so
@@ -191,7 +191,7 @@ An unterminated CSS comment silently kills every rule after it: the page still
 renders, nothing reports an error, and a fix you believe you applied is not
 applied. That check costs one line.
 
-To edit the wording, edit `source/contenu.py`, not the HTML. The nine pages are
+To edit the wording, edit `source/contenu.py`, not the HTML. The ten pages are
 generated; hand-edits to them are overwritten by the next build.
 
 To remove the amber demonstration banner, set `BANDEAU_DEMO = False` at the top
@@ -207,7 +207,7 @@ python3 -m http.server 8861 --directory ..    # in one terminal, from the site r
 python3 verif.py                              # in another
 ```
 
-**1354 checks, 0 failures**, across 9 pages × 14 viewport widths from 320 px to
+**1498 checks, 0 failures**, across 10 pages × 14 viewport widths from 320 px to
 1440 px. The suite measures the page a browser actually draws — never the
 source files. Among what it proves rather than assumes:
 
@@ -301,6 +301,49 @@ of the DOM proves the *page* did.
 
 ---
 
+## The support page
+
+`support.html` is the tenth page. It exists so the movement can accept support
+**before** it has a legal form, a country or an account — the stage it is at
+today.
+
+It is the only page on this site where a display error costs a third party
+money, irreversibly, so it is written the other way round from the usual
+donation page: **what cannot be promised is shown before the means of paying.**
+The warning box — the payment cannot be reversed, the movement has no legal
+form or country yet, political funding is regulated in most countries, nothing
+on the page collects anything about the reader — comes above the address
+panel, and the verification suite checks that this order survives in the
+rendered page.
+
+As everywhere else on this site: no suggested amount, no target, no budget, no
+total already received, no donor. Six questions a giver is entitled to ask are
+shown with their true answer for today, `To be decided`.
+
+### The address lives in one place, and it is empty
+
+`ADRESSE_BTC` in `source/contenu.py` is the only place a wallet address is
+written. It is `""`, and that is not an oversight: an address that arrived as a
+screenshot of a **third party's** social post has been checked only for base58
+validity, and validity says nothing about who owns the wallet. A wrong address
+on a donation page is not a display defect, it is donors' money sent to a
+stranger under the movement's name, with no way back. It is filled in when the
+owner of the movement confirms in writing that the wallet is his.
+
+While it is empty the page shows the same `To be decided` badge as everywhere
+else and can receive no payment. The WordPress build reads the same value from
+a single admin option rather than from the page content, for the same reason:
+one place, so there is never a half-corrected copy.
+
+The suite has two branches for this, and the inactive one is written rather
+than silently skipped — with the address empty it proves that **no string
+resembling a wallet address** appears anywhere in the rendered text; with an
+address set it compares the rendered address **character by character** to the
+source, and requires it to appear once on this page and on none of the other
+nine.
+
+---
+
 ## Still needed from you
 
 ### For the movement
@@ -313,6 +356,11 @@ of the DOM proves the *page* did.
 3. **Whether the site should exist in more than one language.** A movement that
    argues for a multipolar world in one language only is arguing against
    itself.
+4. **Written confirmation that the donation wallet is yours**, and the address
+   pasted back so it can be compared character by character. Until then the
+   support page shows `To be decided` where the address goes. This one is not
+   caution for its own sake: a payment on that network cannot be reversed by
+   anyone.
 
 ### For the practice — the two that block everything else
 

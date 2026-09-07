@@ -678,3 +678,93 @@ PORTAIL_EXIGENCES = [
      "Passwords hashed, sessions bounded, and a second factor for anyone able "
      "to see the whole list."),
 ]
+
+
+# ---------------------------------------------------------------------------
+# page 10 — soutenir avant le lancement
+# ---------------------------------------------------------------------------
+# L'ADRESSE. Elle est declaree ICI et nulle part ailleurs : la page de soutien
+# la lit, et le theme WordPress la lit dans une option d'administration. Deux
+# copies auraient derive, et sur une adresse de portefeuille une derive d'un
+# caractere envoie l'argent chez un inconnu, sans recours.
+#
+# ELLE EST VIDE, ET CE N'EST PAS UN OUBLI. Le client a envoye une adresse
+# Bitcoin par capture d'ecran. La capture est un post Instagram d'un TIERS
+# (compte monarch.stories), et l'adresse figure dans la LEGENDE de ce post.
+# Le controle que j'ai fait dit seulement ceci : la chaine est une adresse
+# mainnet P2SH valide, somme de controle base58 verifiee. La validite ne dit
+# RIEN du proprietaire — n'importe quelle adresse valide appartient a
+# quelqu'un, et rien ne dit que ce quelqu'un est lui.
+#
+# Une adresse fausse publiee sur une page de dons n'est pas un defaut
+# d'affichage : c'est de l'argent de donateurs envoye a un inconnu, de maniere
+# irreversible, sous le nom du mouvement. Le cout d'un blanc est nul ; celui
+# d'une erreur est definitif et retombe sur lui.
+#
+# Elle se remplit donc quand, et seulement quand, il confirme PAR ECRIT que le
+# portefeuille est le sien, en recollant l'adresse dans un message. Tant
+# qu'elle vaut "", la page affiche « To be decided » comme partout ailleurs et
+# ne peut recevoir aucun paiement.
+ADRESSE_BTC = ""
+
+# Le reseau de l'adresse ci-dessus. Ecrit en toutes lettres sur la page :
+# envoyer un actif d'une autre chaine a une adresse Bitcoin le detruit, et
+# c'est l'erreur de donateur la plus courante.
+RESEAU_BTC = "Bitcoin mainnet (BTC)"
+
+SOUTIEN_EST = [
+    ("A gift, and nothing else.",
+     "It is given to the movement. It is not a purchase, not a subscription "
+     "and not an investment."),
+    ("Voluntary, and of any size.",
+     "No amount is suggested anywhere on this page. A movement that has "
+     "published no accounts has no business naming a figure."),
+    ("Sent directly.",
+     "There is no platform between the giver and the movement, so nobody "
+     "takes a percentage and no third party is told who gave."),
+    ("Anonymous by default.",
+     "This page has no form and no account. Nothing here asks who you are, "
+     "and nothing here records it."),
+]
+
+SOUTIEN_NEST_PAS = [
+    ("Not a membership.",
+     "Giving does not admit anyone to the Circle. Admission is by decision, "
+     "and how it works is itself an open question."),
+    ("Not standing in the movement.",
+     "It confers no title, no vote, no representative capacity and no right "
+     "to speak in the movement&rsquo;s name."),
+    ("Not influence over a position.",
+     "No published position is for sale at any price. The rule that keeps "
+     "money away from what the movement says is set out on Lobbying."),
+    ("Not refundable.",
+     "A payment on this network cannot be reversed by anyone, including the "
+     "movement. There is no chargeback and no dispute procedure."),
+]
+
+# Ce qui n'est pas encore decide, et que la page affiche plutot que de le
+# taire. Chaque ligne renvoie a une decision reelle du tableau de movement.html
+# — aucune n'est inventee ici pour faire nombre.
+SOUTIEN_OUVERT = [
+    ("Who receives it",
+     "The movement has no legal form and no country of registration yet. "
+     "Until it does, a contribution is held by no institution and answers to "
+     "no register."),
+    ("What it pays for",
+     "No budget has been published, so none is claimed. A page that promised "
+     "where the money goes would be inventing it."),
+    ("Whether gifts are published",
+     "Whether contributions, their totals and their origins appear publicly, "
+     "and at which threshold."),
+    ("Which rules apply",
+     "Political funding is regulated in most countries, and the rules that "
+     "bind the movement follow from its legal form and its country. Anyone "
+     "whose own country restricts political contributions should check "
+     "before sending."),
+    ("Other ways to give",
+     "Bank transfer, card, or a platform. None of them exists yet, and none "
+     "can exist before there is an entity to hold an account."),
+    ("Receipts",
+     "Whether a giver can obtain any acknowledgement at all, and from whom. "
+     "A bare address issues none."),
+]

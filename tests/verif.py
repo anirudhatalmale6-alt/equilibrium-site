@@ -61,6 +61,7 @@ from playwright.sync_api import sync_playwright
 
 BASE = "http://127.0.0.1:8861/"
 PAGES = ["index.html", "principles.html", "movement.html", "join.html",
+         "support.html",
          "services.html", "lobbying.html", "circle.html", "portal.html",
          "portal-area.html"]
 LARGEURS = [320, 360, 375, 390, 414, 480, 560, 640, 768, 900, 1024, 1200, 1366, 1440]
@@ -72,7 +73,7 @@ sys.path.insert(0, os.path.join(RACINE, "source"))
 from contenu import (DECLARATION, PRINCIPES, DECISIONS, FAQ, NEST_PAS,  # noqa: E402
                      PRATIQUE, PRATIQUE_NEST_PAS, LOBBYING_FAIT, LOBBYING_NEFAIT,
                      MURAILLE, FAQ_PRATIQUE, CERCLE_QUOI, CERCLE_ACTIVITES,
-                     PORTAIL_EXIGENCES)
+                     PORTAIL_EXIGENCES, ADRESSE_BTC, SOUTIEN_OUVERT)
 
 echecs = []
 n = 0
@@ -502,6 +503,78 @@ with sync_playwright() as pw:
     verif("formulaire : aucun champ d'opinion, d'appartenance ou d'identite",
           not [c for c in fm["champs"] if any(m in c.lower() for m in interdits_champs)],
           str(fm["champs"]))
+
+    # ---- 9. la page de soutien ------------------------------------------
+    # C'est la seule page du site ou une erreur d'affichage coute de l'argent
+    # a un tiers, et de maniere irreversible. Les controles portent donc sur
+    # l'adresse elle-meme et pas seulement sur la mise en page.
+    pg.goto(BASE + "support.html", wait_until="networkidle")
+    defiler(pg)
+    corps_d = pg.inner_text("body")
+
+    affiche = pg.evaluate("() => document.querySelector('.don .val')?.textContent.trim()")
+    if ADRESSE_BTC:
+        # Comparaison CARACTERE PAR CARACTERE contre la source. Un « a peu
+        # pres » n'a aucun sens ici : une adresse fausse d'un signe est une
+        # adresse qui appartient a quelqu'un d'autre.
+        verif("soutien : l'adresse affichee est exactement celle de la source",
+              affiche == ADRESSE_BTC, f"rendu {affiche!r} vs source {ADRESSE_BTC!r}")
+        # Elle ne doit apparaitre qu'a UN endroit, et sur UNE page. Une adresse
+        # recopiee ailleurs est la copie qu'on oubliera de corriger.
+        verif("soutien : l'adresse n'est ecrite qu'une fois sur la page",
+              corps_d.count(ADRESSE_BTC) == 1, str(corps_d.count(ADRESSE_BTC)))
+        for autre in PAGES:
+            if autre == "support.html":
+                continue
+            pg.goto(BASE + autre, wait_until="domcontentloaded")
+            verif(f"{autre} : l'adresse de soutien n'y figure pas",
+                  ADRESSE_BTC not in pg.inner_text("body"))
+        pg.goto(BASE + "support.html", wait_until="networkidle")
+    else:
+        # Le cas d'aujourd'hui, et il est ECRIT comme tel plutot que saute en
+        # silence : sans cette branche, le controle ci-dessus passerait sans
+        # rien mesurer et le compte total ne dirait pas qu'il n'a rien mesure.
+        verif("soutien : sans adresse confirmee, la page affiche la pastille",
+              affiche == "To be decided", str(affiche))
+        verif("soutien : aucune adresse de portefeuille n'est publiee",
+              not re.search(r"\b(bc1[a-z0-9]{20,}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b",
+                            corps_d),
+              str(re.findall(r"\b(bc1[a-z0-9]{20,}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b",
+                             corps_d)[:2]))
+
+    # Le reseau est nomme en toutes lettres : envoyer un actif d'une autre
+    # chaine a une adresse Bitcoin le detruit, et c'est l'erreur de donateur
+    # la plus courante.
+    verif("soutien : le reseau est nomme sur la page", "Bitcoin mainnet" in corps_d)
+    # L'ordre se lit dans le texte RENDU, et le rendu passe par
+    # text-transform:uppercase sur les etiquettes : « Wallet address » y est
+    # ecrit « WALLET ADDRESS ». Une recherche sensible a la casse ne trouvait
+    # rien et faisait tomber le controle en erreur au lieu de le faire echouer.
+    bas_d = corps_d.lower()
+    verif("soutien : l'irreversibilite est ecrite avant le cadre d'adresse",
+          bas_d.index("cannot be reversed") < bas_d.index("wallet address"),
+          "l'avertissement passe apres l'adresse")
+    verif("soutien : la page dit qu'elle ne collecte rien",
+          "no form, no account, no list" in corps_d)
+    verif("soutien : aucun montant suggere", not re.search(r"[€$£]\s?\d", corps_d))
+    # Le don n'achete ni adhesion, ni position. C'est la promesse de la page,
+    # et elle est verifiee dans son texte plutot que supposee.
+    for promesse in ("Not a membership.", "Not influence over a position.",
+                     "Not refundable."):
+        verif(f"soutien : la page ecrit « {promesse} »", promesse in corps_d)
+    # Autant de cartes ouvertes que de lignes dans la source, une pastille par
+    # carte : le compte se lit dans le rendu, pas dans le fichier.
+    cartes = pg.evaluate("""() => [...document.querySelectorAll('#open .card')].map(c => ({
+        titre: c.querySelector('h3').textContent.trim(),
+        tbd: !!c.querySelector('.tbd')}))""")
+    verif("soutien : autant de questions ouvertes que dans la source",
+          len(cartes) == len(SOUTIEN_OUVERT), f"{len(cartes)} vs {len(SOUTIEN_OUVERT)}")
+    verif("soutien : chaque question ouverte porte sa pastille",
+          all(c["tbd"] for c in cartes),
+          str([c["titre"] for c in cartes if not c["tbd"]]))
+    verif("soutien : les titres sont ceux de la source",
+          [c["titre"] for c in cartes] == [t for t, _ in SOUTIEN_OUVERT],
+          str([c["titre"] for c in cartes]))
 
     # =======================================================================
     # LA PRATIQUE — services diplomatiques et lobbying.
